@@ -25,6 +25,7 @@ def main_menu
     puts "Press 6 to list events happening today"
     puts "Press 7 to list events happening this week"
     puts "Press 8 to list events happening this month"
+    puts "Press 9 to list events that happened yesterday"
     puts "Press 'x' to exit the program"
     menu_choice = gets.chomp
     case menu_choice
@@ -44,6 +45,8 @@ def main_menu
       list_by_this_week
     when '8'
       list_by_this_month
+    when '9'
+      yesterdays_events
     when 'x'
       puts "Goodbye!"
       exit
@@ -182,6 +185,17 @@ end
 def list_by_this_month
   Event.all.order(start: :asc).each do |event|
     if event.start.strftime("%m") == Time.now.strftime("%m")
+      whitespace
+      puts "#{event.description} | #{event.location} | #{event.start}"
+    end
+  end
+end
+
+def yesterdays_events
+  today = Date.today
+  today -= 1
+  Event.all.order(start: :asc).each do |event|
+    if event.start.strftime("%d") == (today).strftime("%d")
       whitespace
       puts "#{event.description} | #{event.location} | #{event.start}"
     end
