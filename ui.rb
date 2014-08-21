@@ -20,6 +20,7 @@ def main_menu
     puts "Press 2 to delete an event"
     puts "Press 3 to edit an event"
     puts "Press 4 to list all events"
+    puts "Press 5 to list all future events by date"
     puts "Press 'x' to exit the program"
     menu_choice = gets.chomp
     if menu_choice == '1'
@@ -30,6 +31,8 @@ def main_menu
       edit_event
     elsif menu_choice == '4'
       list_events
+    elsif menu_choice == '5'
+      list_by_date
     elsif menu_choice == 'x'
       puts "Goodbye!"
       exit
@@ -136,6 +139,15 @@ def edit_end
   @chosen_event.update(:end => gets.chomp)
   puts "Thanks! Your event is now: #{@chosen_event.description} | #{@chosen_event.location} | #{@chosen_event.start} | #{@chosen_event.end}"
   main_menu
+end
+
+def list_by_date
+  header
+  Event.all.order(start: :desc).each do |event|
+    if event.start > Time.now
+      puts "#{event.description} | #{event.location} | #{event.start}\n"
+    end
+  end
 end
 
 main_menu
