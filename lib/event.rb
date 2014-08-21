@@ -3,6 +3,7 @@ class Event < ActiveRecord::Base
   validates :location, :presence => true
   validates :start, :presence => true
   validates :end, :presence => true
+  validates :start, :on_or_after => Time.now
 
   before_save :capitalize
 

@@ -15,25 +15,36 @@ def header
 end
 
 def main_menu
-  loop do
+  menu_choice = nil
+  until menu_choice == 'x'
     puts "Press 1 to create a new event"
     puts "Press 2 to delete an event"
     puts "Press 3 to edit an event"
     puts "Press 4 to list all events"
     puts "Press 5 to list all future events by date"
+    puts "Press 6 to list events happening today"
+    puts "Press 7 to list events happening this week"
+    puts "Press 8 to list events happening this month"
     puts "Press 'x' to exit the program"
     menu_choice = gets.chomp
-    if menu_choice == '1'
+    case menu_choice
+    when '1'
       create_event
-    elsif menu_choice == '2'
+    when '2'
       delete_event
-    elsif menu_choice == '3'
+    when '3'
       edit_event
-    elsif menu_choice == '4'
+    when '4'
       list_events
-    elsif menu_choice == '5'
+    when '5'
       list_by_date
-    elsif menu_choice == 'x'
+    when '6'
+      list_by_today
+    when '7'
+      list_by_this_week
+    when '8'
+      list_by_this_month
+    when 'x'
       puts "Goodbye!"
       exit
     else
@@ -142,10 +153,37 @@ def edit_end
 end
 
 def list_by_date
-  header
-  Event.all.order(start: :desc).each do |event|
-    if event.start > Time.now
-      puts "#{event.description} | #{event.location} | #{event.start}\n"
+  Event.all.order(start: :asc).each do |event|
+    if event.start > Time.new
+      whitespace
+      puts "#{event.description} | #{event.location} | #{event.start}"
+    end
+  end
+end
+
+def list_by_today
+  Event.all.order(start: :asc).each do |event|
+    if event.start.strftime("%d") == Time.now.strftime("%d")
+      whitespace
+      puts "#{event.description} | #{event.location} | #{event.start}"
+    end
+  end
+end
+
+def list_by_this_week
+  Event.all.order(start: :asc).each do |event|
+    if event.start.strftime("%W") == Time.now.strftime("%W")
+      whitespace
+      puts "#{event.description} | #{event.location} | #{event.start}"
+    end
+  end
+end
+
+def list_by_this_month
+  Event.all.order(start: :asc).each do |event|
+    if event.start.strftime("%m") == Time.now.strftime("%m")
+      whitespace
+      puts "#{event.description} | #{event.location} | #{event.start}"
     end
   end
 end
